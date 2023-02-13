@@ -12,6 +12,12 @@
             text-align: center;
         }
 
+        #input {
+            width: fit-content;
+            margin: auto;
+            padding-bottom: 10px;
+        }
+
         table {
             border-collapse: collapse;
             max-width: 600px;
@@ -33,7 +39,12 @@
 
 <body>
     <h1>Neradni dani u Hrvatskoj</h1>
-    <table>
+    <div id="input">
+        <label for="inputField">Za godinu:</label>
+        <input type="number" id="inputField" size="5" onchange="restart()">
+        <button onclick="restart()">Postavi</button>
+    </div>
+    <table id="table">
         <thead>
             <tr>
                 <th>Ime</th>
@@ -42,71 +53,90 @@
                 <th>Preostalo dana</th>
             </tr>
         </thead>
-        <tbody id="holidayList">
-        </tbody>
+        <tbody id="holidayList"></tbody>
     </table>
     <br>
     <hr>
     <cite>Autor: Ivan Vnučec, <a href="https://github.com/IvanVnucec/neradni-dani-u-hr">GitHub</a>, 2023</cite>
 
     <script>
-        const today = new Date();
-        const currentYear = today.getFullYear();
-        const nextYear = currentYear + 1;
+        onInit();
 
-        const easter = getEasterDate(currentYear);
-        const easterMonday = new Date(easter.getTime() + 24 * 60 * 60 * 1000);
+        function onInit() {
+            const today = new Date();
+            document.getElementById("inputField").value = today.getFullYear();
 
-        const holidays = [
-            { date: new Date(`01/06/${currentYear}`), name: "Sveta tri kralja (Bogojavljenje)" },
-            { date: easter, name: "Uskrs" },
-            { date: easterMonday, name: "Uskrsni ponedjeljak" },
-            { date: new Date(`05/01/${currentYear}`), name: "Praznik rada" },
-            { date: new Date(`05/30/${currentYear}`), name: "Dan državnosti" },
-            { date: new Date(`06/08/${currentYear}`), name: "Tijelovo" },
-            { date: new Date(`06/22/${currentYear}`), name: "Dan antifašističke borbe" },
-            { date: new Date(`08/05/${currentYear}`), name: "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja" },
-            { date: new Date(`08/15/${currentYear}`), name: "Velika Gospa" },
-            { date: new Date(`11/01/${currentYear}`), name: "Dan svih svetih" },
-            { date: new Date(`11/18/${currentYear}`), name: "Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje" },
-            { date: new Date(`12/25/${currentYear}`), name: "Božić" },
-            { date: new Date(`12/26/${currentYear}`), name: "Sveti Stjepan" },
-            { date: new Date(`01/01/${nextYear}`), name: "Nova godina" },
-        ];
+            refresh();
+        }
 
-        holidays.forEach(function (holiday) {
-            var row = document.createElement("tr");
+        function restart() {
+            clearTable();
+            refresh();
+        }
 
-            // ime praznika
-            var nameCell = document.createElement("td");
-            var holidayName = holiday.name;
-            nameCell.innerHTML = holidayName;
-            row.appendChild(nameCell);
+        function refresh() {
+            const today = new Date();
+            const currentYear = Number(document.getElementById("inputField").value);
+            const nextYear = currentYear + 1;
 
-            // dan
-            const days = ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"];
-            var dateNameCell = document.createElement("td");
+            const easter = getEasterDate(currentYear);
+            const easterMonday = new Date(easter.getTime() + 24 * 60 * 60 * 1000);
+
+            const holidays = [
+                { date: new Date(`01/06/${currentYear}`), name: "Sveta tri kralja (Bogojavljenje)" },
+                { date: easter, name: "Uskrs" },
+                { date: easterMonday, name: "Uskrsni ponedjeljak" },
+                { date: new Date(`05/01/${currentYear}`), name: "Praznik rada" },
+                { date: new Date(`05/30/${currentYear}`), name: "Dan državnosti" },
+                { date: new Date(`06/08/${currentYear}`), name: "Tijelovo" },
+                { date: new Date(`06/22/${currentYear}`), name: "Dan antifašističke borbe" },
+                { date: new Date(`08/05/${currentYear}`), name: "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja" },
+                { date: new Date(`08/15/${currentYear}`), name: "Velika Gospa" },
+                { date: new Date(`11/01/${currentYear}`), name: "Dan svih svetih" },
+                { date: new Date(`11/18/${currentYear}`), name: "Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje" },
+                { date: new Date(`12/25/${currentYear}`), name: "Božić" },
+                { date: new Date(`12/26/${currentYear}`), name: "Sveti Stjepan" },
+                { date: new Date(`01/01/${nextYear}`), name: "Nova godina" },
+            ];
+
+            holidays.forEach(function (holiday) {
+                var row = document.createElement("tr");
+
+                // ime praznika
+                var nameCell = document.createElement("td");
+                var holidayName = holiday.name;
+                nameCell.innerHTML = holidayName;
+                row.appendChild(nameCell);
+
+                // dan
+                const days = ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"];
+                var dateNameCell = document.createElement("td");
             const onMobile = screen.width < 400;
-            var dayName = days[holiday.date.getDay()];
-            if (onMobile) {
-                dayName = dayName.substring(0, 3) + ".";
-            }
-            dateNameCell.innerHTML = dayName;
-            row.appendChild(dateNameCell);
+                var dayName = days[holiday.date.getDay()];
+                if (onMobile) {
+                    dayName = dayName.substring(0, 3) + ".";
+                }
+                dateNameCell.innerHTML = dayName;
+                row.appendChild(dateNameCell);
 
-            // datum
-            var dateCell = document.createElement("td");
-            dateCell.innerHTML = holiday.date.toLocaleDateString();
-            row.appendChild(dateCell);
+                // datum
+                var dateCell = document.createElement("td");
+                dateCell.innerHTML = holiday.date.toLocaleDateString();
+                row.appendChild(dateCell);
 
-            // preostalo dana
-            holiday.daysUntil = Math.round((holiday.date - today) / (1000 * 60 * 60 * 24));
-            var daysUntilCell = document.createElement("td");
-            daysUntilCell.innerHTML = holiday.daysUntil;
-            row.appendChild(daysUntilCell);
+                // preostalo dana
+                holiday.daysUntil = Math.round((holiday.date - today) / (1000 * 60 * 60 * 24));
+                var daysUntilCell = document.createElement("td");
+                daysUntilCell.innerHTML = holiday.daysUntil;
+                row.appendChild(daysUntilCell);
 
-            document.getElementById("holidayList").appendChild(row);
-        });
+                document.getElementById("holidayList").appendChild(row);
+            });
+        }
+
+        function clearTable() {
+            document.getElementById("holidayList").innerHTML = "";
+        }
 
         function getEasterDate(year) {
             var a = year % 19;
