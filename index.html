@@ -8,10 +8,14 @@
     <title>Neradni dani u Hrvatskoj</title>
 
     <style>
+        h1 {
+            text-align: center;
+        }
+
         table {
-            table-layout: fixed;
-            width: 100%;
             border-collapse: collapse;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         th,
@@ -32,7 +36,7 @@
     <table>
         <thead>
             <tr>
-                <th>Ime dana</th>
+                <th>Ime</th>
                 <th>Dan u tjednu</th>
                 <th>Datum</th>
                 <th>Preostalo dana</th>
@@ -75,13 +79,19 @@
 
             // ime praznika
             var nameCell = document.createElement("td");
-            nameCell.innerHTML = holiday.name;
+            var holidayName = holiday.name;
+            nameCell.innerHTML = holidayName;
             row.appendChild(nameCell);
 
             // dan
             const days = ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"];
             var dateNameCell = document.createElement("td");
-            dateNameCell.innerHTML = days[holiday.date.getDay()];
+            const onMobile = screen.width < 400;
+            var dayName = days[holiday.date.getDay()];
+            if (onMobile) {
+                dayName = dayName.substring(0, 3) + ".";
+            }
+            dateNameCell.innerHTML = dayName;
             row.appendChild(dateNameCell);
 
             // datum
