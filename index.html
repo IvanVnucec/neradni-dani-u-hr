@@ -135,8 +135,9 @@
                 row.appendChild(dateNameCell);
 
                 // datum
+                const months = ["siječnja", "veljače", "ožujka", "travnja", "svibnja", "lipnja", "srpnja", "kolovoza", "rujna", "listopada", "studenog", "prosinca"];
                 var dateCell = document.createElement("td");
-                dateCell.innerHTML = holiday.date.toLocaleDateString();
+                dateCell.innerHTML = holiday.date.getDate() + ". " + months[holiday.date.getMonth()] + " " + holiday.date.getFullYear() + ".";
                 row.appendChild(dateCell);
 
                 // preostalo dana
