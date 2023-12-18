@@ -126,7 +126,7 @@
                 // dan
                 const days = ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"];
                 var dateNameCell = document.createElement("td");
-            const onMobile = screen.width < 400;
+                const onMobile = screen.width < 400;
                 var dayName = days[holiday.date.getDay()];
                 if (onMobile) {
                     dayName = dayName.substring(0, 3) + ".";
